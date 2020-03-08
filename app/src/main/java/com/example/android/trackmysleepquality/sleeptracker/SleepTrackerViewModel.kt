@@ -22,13 +22,13 @@ class SleepTrackerViewModel (
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     // Get all the nights from the database
-    private val nights = database.getAllNights()
+    val nights = database.getAllNights()
 
     // transforming the nights into a nightsString,
     // and getting the application resources
     val nightsString = Transformations.map(nights) { nights ->
         formatNights(nights, application.resources)
-    }!!
+    }
 
     // This variable is used to hold the current night, and make the variable
     // MutableLiveData, because the ViewModel need to be able to observe the data
@@ -64,6 +64,11 @@ class SleepTrackerViewModel (
     private var _showSnackbarEvent = MutableLiveData<Boolean>()
     val showSnackbarEvent: LiveData<Boolean>
         get() = _showSnackbarEvent
+
+    // To get triggered when button clicked
+    private var _navigateToSleepDetail = MutableLiveData<Long>()
+    val navigateToSleepDetail
+        get() = _navigateToSleepDetail
 
     init {
         initializeTonight()
@@ -174,6 +179,16 @@ class SleepTrackerViewModel (
     // set the value of _showSnackbarEvent property
     fun doneShowingSnackbar() {
         _showSnackbarEvent.value = false
+    }
+
+    // click handler function
+    fun onSleepNightClicked(id: Long) {
+        _navigateToSleepDetail.value = id
+    }
+
+    // Method to call after the app has finished navigating
+    fun onSleepDetailNavigated() {
+        _navigateToSleepDetail.value = null
     }
 
     override fun onCleared() {

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.android.trackmysleepquality.sleepquality
 
 import android.os.Bundle
@@ -37,7 +39,7 @@ class SleepQualityFragment : Fragment() {
 
         // Get the arguments that came with the navigation, extracting
         // from the bundle.
-        val arguments = SleepQualityFragmentArgs.fromBundle(arguments!!)
+        val arguments = SleepQualityFragmentArgs.fromBundle(requireArguments())
 
         // Get data source
         val dataSource = SleepDatabase.getInstance(application).sleepDatabaseDao
@@ -53,10 +55,10 @@ class SleepQualityFragment : Fragment() {
         binding.sleepQualityViewModel = sleepQualityViewModel
 
         // Adding the Observer
-        sleepQualityViewModel.navigateToSleepTracker.observe(this, Observer {
+        sleepQualityViewModel.navigateToSleepTracker.observe(viewLifecycleOwner, Observer {
             if (it == true) { // Observed if the state is true
                 this.findNavController().navigate(
-                        SleepQualityFragmentDirections.ActionSleepQualityFragmentToSleepTrackerFragment())
+                        SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
                 sleepQualityViewModel.doneNavigating()
             }
         })
